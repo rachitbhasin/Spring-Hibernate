@@ -26,14 +26,9 @@ public class AppConfig {
 
    @Autowired
    private Environment env;
-
-   @Bean 
-   public org.hibernate.Interceptor hibernateInterceptor() { 
-       return saveOrUpdateInterceptor(); 
-   } 
    
    @Bean
-   public SaveOrUpdateInterceptor saveOrUpdateInterceptor () {
+   public org.hibernate.Interceptor saveOrUpdateInterceptor () {
 	   return new SaveOrUpdateInterceptor();
    } 
    
@@ -62,7 +57,7 @@ public class AppConfig {
 
       factoryBean.setHibernateProperties(props);
       factoryBean.setPackagesToScan("com.rc.uam.model");
-      factoryBean.setEntityInterceptor(hibernateInterceptor());
+      factoryBean.setEntityInterceptor(saveOrUpdateInterceptor());
 
       return factoryBean;
    }

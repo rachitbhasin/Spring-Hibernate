@@ -34,19 +34,21 @@ public class LoginController {
 	public String handleUserLogin(ModelMap model, @RequestParam String name,
 			@RequestParam String password) {
 		
-		try {
-			User user = userService.get(1L);
-			if(user != null) {
-				logger.info("============== Found user ============ " + user.getFirstName() + " " + user.getLastName());
-				if(user.getEmail() != name && user.getPassword() != password)
-				model.put("errorMessage", "Invalid Credentials");
-				return "login";
-			}
-			
-		} catch (UamException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			User user = userService.get(1L);
+//			if(user != null) {
+//				logger.info("============== Found user ============ " + user.getEmail() + " " + user.getPassword());
+//				logger.info("============== User attempt ============ " + name + " " + password);
+//				if(user.getEmail() != name && user.getPassword() != password) {
+//					model.put("errorMessage", "Invalid Credentials");
+//					return "login";
+//				}
+//			}
+//			
+//		} catch (UamException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		model.put("name", name);
 		return "welcome";
