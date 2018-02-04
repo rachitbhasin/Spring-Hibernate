@@ -6,56 +6,65 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.rc.uam.dao.AbstractDao;
 import com.rc.uam.dao.UserDao;
 import com.rc.uam.model.User;
 
-
 @Repository
-public class UserDaoImpl implements UserDao {
-	@Autowired
-	   private SessionFactory sessionFactory;
+public class UserDaoImpl extends AbstractDao<Long, User> implements UserDao {
 
-	   @Override
-	   public long save(User user) {
-	      sessionFactory.getCurrentSession().save(user);
-	      return user.getId();
-	   }
+	@Override
+	public long save(User user) {
+		save(user);
+		return user.getId();
+	}
 
-	   @Override
-	   public User get(Long id) {
-	      return sessionFactory.getCurrentSession().get(User.class, id);
-	   }
+	@Override
+	public User get(Long id) {
+		return getByKey(id);
+	}
 
-	   @Override
-	   public List<User> list() {
-	      Session session = sessionFactory.getCurrentSession();
-	      CriteriaBuilder cb = session.getCriteriaBuilder();
-	      CriteriaQuery<User> cq = cb.createQuery(User.class);
-	      Root<User> root = cq.from(User.class);
-	      cq.select(root);
-	      Query<User> query = session.createQuery(cq);
-	      return query.getResultList();
-	   }
+	@Override
+	public User getByField(String field, String value) {
+		//**creating CriteriaBuilder**
+		CriteriaBuilder builder = getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> userRoot = criteria.from(User.class);
+		criteria.select(userRoot);
 
-	   @Override
-	   public void update(Long id, User user) {
-	      Session session = sessionFactory.getCurrentSession();
-	      @SuppressWarnings("unused")
-	      User user2 = session.byId(User.class).load(id);
-	      user2 = user;
-	      session.flush();
-	   }
+		//**Adding where clause**
+		criteria.where(builder.equal(userRoot.get(field), value));
+		
+		return getSession().createQuery(criteria).uniqueResult();
+	}
 
-	   @Override
-	   public void delete(Long id) {
-	      Session session = sessionFactory.getCurrentSession();
-	      User user = session.byId(User.class).load(id);
-	      session.delete(user);
-	   }
+	@Override
+	public List<User> list() {
+		CriteriaBuilder builder = getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		
+		Root<User> root = criteria.from(User.class);
+		criteria.select(root);
+		
+		Query<User> query = getSession().createQuery(criteria);
+		
+		return query.getResultList();
+	}
+
+	@Override
+	public void update(Long id, User user) {
+		@SuppressWarnings("unused")
+		User user2 = loadByKey(id);
+		user2 = user;
+		flush();
+	}
+
+	@Override
+	public void delete(Long id) {
+		User user = loadByKey(id);
+		delete(user);
+	}
 }

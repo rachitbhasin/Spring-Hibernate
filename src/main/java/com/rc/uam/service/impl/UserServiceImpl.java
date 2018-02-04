@@ -34,7 +34,12 @@ public class UserServiceImpl implements UserService {
 	public User get(Long id) throws UamException {
 		return userDao.get(id);
 	}
-
+	
+	@Override
+	public User getByField(String field, String value) throws UamException {
+		return userDao.getByField(field, value);
+	}
+	
 	@Override
 	public List<User> list() throws UamException {
 		return userDao.list();

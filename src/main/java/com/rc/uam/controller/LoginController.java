@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.rc.uam.exception.UamException;
 import com.rc.uam.model.User;
 import com.rc.uam.service.UserService;
+import com.rc.uam.utility.Constants;
 
 /**
  * @author Rachit Bhasin
@@ -31,26 +32,26 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="/login", method = RequestMethod.POST)
-	public String handleUserLogin(ModelMap model, @RequestParam String name,
+	public String handleUserLogin(ModelMap model, @RequestParam String email,
 			@RequestParam String password) {
-		
-//		try {
-//			User user = userService.get(1L);
-//			if(user != null) {
-//				logger.info("============== Found user ============ " + user.getEmail() + " " + user.getPassword());
-//				logger.info("============== User attempt ============ " + name + " " + password);
-//				if(user.getEmail() != name && user.getPassword() != password) {
-//					model.put("errorMessage", "Invalid Credentials");
-//					return "login";
-//				}
-//			}
-//			
-//		} catch (UamException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		User user = null;
+		try {
+			user = userService.getByField(Constants.EMAIL, email);
+			if(user != null) {
+				logger.info("============== Found user ============ " + user.getEmail() + " " + user.getPassword());
+				logger.info("============== User attempt ============ " + email + " " + password);
+				if(!user.getEmail().equalsIgnoreCase(email) && !user.getPassword().equals(password)) {
+					model.put("errorMessage", "Invalid Credentials");
+					return "login";
+				}
+			}
+			
+		} catch (UamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		model.put("name", name);
+		model.put("name", user.getFirstName());
 		return "welcome";
 	}
 }
