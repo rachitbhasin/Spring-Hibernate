@@ -1,6 +1,9 @@
 package com.rc.uam.utility;
 
-import com.rc.uam.model.User;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+
+
 
 /**
  * @author Rachit Bhasin
@@ -8,20 +11,48 @@ import com.rc.uam.model.User;
  */
 
 public final class CustomUtil {
-	/**
-	 * function to get logged in user details
-	 *
-	 * @return
-	 */
 	public static User getLoggedInUser() {
-		User user = new User();
-		
-		user.setFirstName("Admin");
-		user.setLastName("lastname");
-		user.setEmail("admin@admin.com");
-		user.setId(1L);
-		user.setPassword("1234556");
-		
-		return user;
+		if (isUserLoggedIn()) {
+			return (User) SecurityContextHolder.getContext()
+					.getAuthentication().getPrincipal();
+		} else {
+			return null;
+		}
+	}
+
+	// public static Object checkAnonymousUser() {
+	// return SecurityContextHolder.getContext().getAuthentication()
+	// .getPrincipal();
+	// }
+
+	public static boolean isAdmin() {
+		boolean b = false;
+
+		if (getLoggedInUser() != null) {
+//			if (getLoggedInUser().getRole().getName().equalsIgnoreCase(
+//					Constants.ROLE_ADMIN)) {
+//				b = true;
+//			}
+			if(getLoggedInUser().getAuthorities().contains(Constants.ROLE_ADMIN)) {
+				b = true;
+			}
+		}
+
+		return b;
+	}
+
+	/**
+	 * to check if user logged in or not
+	 *
+	 * @return true/false (Boolean)
+	 */
+	public static Boolean isUserLoggedIn() {
+		if (SecurityContextHolder.getContext().getAuthentication() != null
+				&& !SecurityContextHolder.getContext().getAuthentication()
+						.getPrincipal().equals("anonymousUser")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
