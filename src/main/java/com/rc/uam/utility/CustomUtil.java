@@ -1,8 +1,8 @@
 package com.rc.uam.utility;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
+import com.rc.uam.model.User;
 
 
 /**
@@ -29,11 +29,8 @@ public final class CustomUtil {
 		boolean b = false;
 
 		if (getLoggedInUser() != null) {
-//			if (getLoggedInUser().getRole().getName().equalsIgnoreCase(
-//					Constants.ROLE_ADMIN)) {
-//				b = true;
-//			}
-			if(getLoggedInUser().getAuthorities().contains(Constants.ROLE_ADMIN)) {
+			if (getLoggedInUser().getRole().getName().equalsIgnoreCase(
+					Constants.ROLE_ADMIN)) {
 				b = true;
 			}
 		}

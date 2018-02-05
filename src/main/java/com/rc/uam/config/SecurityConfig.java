@@ -7,12 +7,19 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import com.rc.uam.service.impl.CustomAuthenticationProvider;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter  {
+	
 	@Autowired
-    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("admin@admin.com").password("123456").roles("ADMIN");
+	private CustomAuthenticationProvider customAuthProvider;
+	
+	@Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		//auth.inMemoryAuthentication().withUser("admin@admin.com").password("123456").roles("ADMIN");
+		auth.authenticationProvider(customAuthProvider);
     }
      
     @Override
