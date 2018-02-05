@@ -3,11 +3,9 @@ package com.rc.uam.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,17 +22,15 @@ import com.rc.uam.utility.CustomUtil;
 @Controller
 public class LoginController {
 
-	private static final Logger logger = Logger.getLogger(LoginController.class);
+	//private static final Logger logger = Logger.getLogger(LoginController.class);
 	
 	@Autowired
 	UserService userService;
 	
 	@RequestMapping(value="/login", method = RequestMethod.GET)
 	public String showLoginPage() {
-		logger.info("User is Logged in: " + CustomUtil.isUserLoggedIn());
-		User user = CustomUtil.getLoggedInUser();
-		if(user!=null) {
-			logger.info("Logged in as: " + user.getUsername());
+		if(CustomUtil.isUserLoggedIn()) {
+			return "redirect:/";
 		}
 		
 		return "login";

@@ -1,11 +1,22 @@
 package com.rc.uam.config;
 
+import static org.hibernate.cfg.AvailableSettings.C3P0_ACQUIRE_INCREMENT;
+import static org.hibernate.cfg.AvailableSettings.C3P0_MAX_SIZE;
+import static org.hibernate.cfg.AvailableSettings.C3P0_MAX_STATEMENTS;
+import static org.hibernate.cfg.AvailableSettings.C3P0_MIN_SIZE;
+import static org.hibernate.cfg.AvailableSettings.C3P0_TIMEOUT;
+import static org.hibernate.cfg.AvailableSettings.DRIVER;
+import static org.hibernate.cfg.AvailableSettings.FORMAT_SQL;
+import static org.hibernate.cfg.AvailableSettings.HBM2DDL_AUTO;
+import static org.hibernate.cfg.AvailableSettings.PASS;
+import static org.hibernate.cfg.AvailableSettings.SHOW_SQL;
+import static org.hibernate.cfg.AvailableSettings.URL;
+import static org.hibernate.cfg.AvailableSettings.USER;
+
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -15,13 +26,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.rc.uam.interceptor.SaveOrUpdateInterceptor;
 
-import static org.hibernate.cfg.Environment.*;
-
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-@ComponentScans(value = { @ComponentScan("com.rc.uam.dao"),
-      @ComponentScan("com.rc.uam.service") })
 public class AppConfig {
 
    @Autowired
